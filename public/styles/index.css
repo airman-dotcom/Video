@@ -1,3 +1,94 @@
 .navbar-brand {
     font-size: 60px;
 }
+
+h1 {
+    font-family: "Goldman", cursive;
+    font-size: 56px;
+    z-index: 2;
+    position: absolute;
+    left: 50%;
+    margin-top: 24px;
+    margin-left: -245px;
+    color: white;
+}
+
+.nav-link {
+    font-size: 25px;
+}
+
+.logo {
+    border-radius: 25px;
+}
+
+.space {
+    width: 100%;
+    position: relative;
+    z-index: -1;
+}
+
+h4, h6 {
+    color: white;
+    position: absolute;
+    z-index: 2;
+}
+
+h6 {
+    margin-top: 420px;
+    left: 50%;
+    font-size: 20px;
+    margin-left: -293px;
+}
+
+h4 {
+    margin-top: 520px;
+    left: 50%;
+    font-size: 40px;
+    margin-left: -163px;
+}
+
+body {
+    background-color: black;
+}
+
+.footer {
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+    z-index: -1;
+    color: white;
+    text-align: left;
+}
+
+.logo-text {
+    color: white;
+    display: inline;
+    margin: auto;
+}
+
+html {
+    height: 100%;
+}
+
+.logo-text-text {
+    font-size: 20px;
+    margin-top: 10px;
+    float: right;
+}
+
+.container-fluid, .navbar {
+    background-color: black !important;
+}
+
+.normal {
+    margin-right: 80px;
+}
+
+.login {
+    margin-left: 240px;
+}
+
+.login, .sign-up{
+    color: white !important;
+}
+
