@@ -115,7 +115,7 @@ window.oncontextmenu = function(){
 window.addEventListener("beforeunload", (e) => {
   e.returnValue = "Test";
   localStorage.removeItem(user);
-})/*
+})
 document.addEventListener("keydown", (e) => {
   
   if (keys.length < 3){
@@ -158,16 +158,16 @@ document.addEventListener("keydown", (e) => {
       window.location.href = "https://greater.armanakbari1.repl.co";
       }
     }
-})*/
+})
 
 document.body.onload = function(){
-  /*if ((navigator.platform).slice(0, -2) == "Win" && screen_num < 1200){
+  if ((navigator.platform).slice(0, -2) == "Win" && screen_num < 1200){
     localStorage.removeItem(user);
     alert("Hey hey hey! What are you trying to pull?")
     
     document.body.remove();
     window.location.href = "https://greater.armanakbari1.repl.co"
-  }*/
+  }
   peer = new Peer(user)
 }
 
