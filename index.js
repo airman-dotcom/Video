@@ -16,6 +16,25 @@ server.listen(3000, "localhost", () => {
     console.log("Listening on http://localhost:3000/")
 })
 
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html")
+})
+
+app.get("/video", (req, res) => {
+  res.sendFile(__dirname + "/public/video.html")
+})
+
+app.get("/login", (req, res) => {
+  res.sendFile(__dirname + "/public/login.html");
+})
+
+app.get("/sign-up", (req, res) => {
+  res.sendFile(__dirname + "/public/sign-up.html");
+})
+
+app.get("/register", (req, res) => {
+  res.sendFile(__dirname + "/public/sign-up.html")
+})
 io.on("connection", (socket) => {
     socket.on("Connected", () => {
         socket.emit("Connected User", "A user has connected")
@@ -92,13 +111,6 @@ io.on("connection", (socket) => {
     })
 })
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html")
-})
-
-app.get("/video", (req, res) => {
-    res.sendFile(__dirname + "/public/video.html")
-})
 
 app.post("/code", (req, res) => {
     const code = uuidv4();
