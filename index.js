@@ -127,3 +127,32 @@ app.post("/test", (req, res) => {
   console.log("disconnected")
 })
 
+app.post("/create_acc", (req, res) => {
+  let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"))
+  let email = req.body.email;
+  let psw = req.body.psw;
+  console.log(email);
+  console.log(psw)
+  console.log(Object.values(server_data))
+  if (Object.values(server_data)[0] == ""){
+    const data = `{"email": ["${email}"],\n "passwords": ["${psw}"]}`;
+    fs.writeFileSync("accounts.json", data);
+    res.json({status: true})
+  } else {
+    if (Object.values(server_data)[0].includes(email)){
+      res.json({status: false, message: "Email already exists in our database."})
+    } else {
+      let new_server_emails = Object.values(server_data)[0];
+      let new_server_passwords = Object.values(server_data)[1];
+      console.log(new_server_emails);
+      console.log(new_server_passwords)
+      new_server_emails.push(email);
+      new_server_passwords.push(psw)
+      console.log(new_server_emails);
+      console.log(new_server_passwords)
+      const data = `{"email": ${JSON.stringify(new_server_emails)},\n"passwords": ${JSON.stringify(new_server_passwords)}}`;
+      fs.writeFileSync("accounts.json", data);
+      res.json({status:true})
+    }
+  }
+})
