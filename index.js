@@ -131,9 +131,6 @@ app.post("/create_acc", (req, res) => {
   let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"))
   let email = req.body.email;
   let psw = req.body.psw;
-  console.log(email);
-  console.log(psw)
-  console.log(Object.values(server_data))
   if (Object.values(server_data)[0] == ""){
     const data = `{"email": ["${email}"],\n "passwords": ["${psw}"]}`;
     fs.writeFileSync("accounts.json", data);
@@ -144,15 +141,53 @@ app.post("/create_acc", (req, res) => {
     } else {
       let new_server_emails = Object.values(server_data)[0];
       let new_server_passwords = Object.values(server_data)[1];
-      console.log(new_server_emails);
-      console.log(new_server_passwords)
       new_server_emails.push(email);
       new_server_passwords.push(psw)
-      console.log(new_server_emails);
-      console.log(new_server_passwords)
       const data = `{"email": ${JSON.stringify(new_server_emails)},\n"passwords": ${JSON.stringify(new_server_passwords)}}`;
       fs.writeFileSync("accounts.json", data);
       res.json({status:true})
+    }
+  }
+})
+
+app.post("/login", (req, res) => {
+  let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"))
+  let email = req.body.email;
+  let psw = req.body.psw;
+  if (Object.values(server_data)[0].includes(email)){
+    let email_index = Object.values(server_data)[0].indexOf(email);
+    if (Object.values(server_data)[1][email_index] == psw){
+      res.json({status: true})
+    } else {
+      res.json({status: false, message: "Incorrect Password"})
+    }
+  } else {
+    res.json({status: false, message: "Email doesn't exist in our database"});
+  }
+})
+
+app.post("/logged-in", (req, res) => {
+  let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"));
+  let ip = req.body.ip;
+  if (Object.values(server_data)[0] == ""){
+    res.json({status: false})
+  } else {
+    if (Object.values(server_data)[4].includes(ip)){
+      let index = Object.values(server_data)[4].indexOf(ip);
+      if (Object.values(server_data)[2][index]){
+        //logged-in = true
+        let date = Object.values(server_data)[3][index];
+        let DATE = new Date();
+        //Jan.4[2022]4:25;
+        let year_index = date.indexOf("[");
+        if (date[year_index + 1] + date[year_index + 2] + date[year_index + 3] + date[year_index + 4] == DATE.getFullYear.toString()){
+
+        } else {
+          let logged_array = Object.values(server_data)[2];
+          logged_array[index] = false;
+          fs.writeFileSync()
+        }
+      }
     }
   }
 })

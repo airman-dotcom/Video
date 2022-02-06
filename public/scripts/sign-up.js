@@ -4,6 +4,7 @@ let psw2_input = document.getElementById("psw2");
 const sign_up_button = document.getElementById("sign-up");
 const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const psw_num_regex = /\d/;
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 const psw_special_regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
 function submit(){
@@ -23,6 +24,8 @@ function submit(){
     .then(function(json){
         if (Object.values(json)[0]){
             alert("Account created succesfully.");
+            window.location.href = "/login"
+            
         } else if(!Object.values(json)[0]){
             alert(Object.values(json)[1])
         }

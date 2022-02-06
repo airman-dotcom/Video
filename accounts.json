@@ -1,2 +1,7 @@
-{"email": "",
-"passwords": ""}
+{
+    "email": "",
+    "passwords": "",
+    "logged_in": "",
+    "time": "",
+    "ip": ""
+}
