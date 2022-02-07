@@ -10,8 +10,6 @@ let room_input = document.getElementById("code");
 const join_room = document.getElementById("join");
 let variable;
 let v;
-alert(navigator.platform)
-alert(parseInt(screen.getPropertyValue("width").slice(0, -2)))
 let keys = [];
 let user = prompt("What is your name");
 while (user == "" || user == null || user == undefined){
@@ -46,10 +44,11 @@ let handleSuccess = function(stream){
     join_room.addEventListener("click", () =>{
       if (room_input.value != "" || room_input.value != null || room_input.value != undefined){
         
-        socket.emit("get_id", {"me": socket.id, "to": room_input.value})
+        //socket.emit("get_id", {"me": socket.id, "to": room_input.value})
         const call = peer.call(room_input.value, stream);
         call.on("stream", function(remoteStream){
-          connected_users = {me: user, you: room_input.value}
+          alert("Call accepted")
+          //connected_users = {me: user, you: room_input.value}
           your_video.srcObject = remoteStream;
           
         })
@@ -58,11 +57,16 @@ let handleSuccess = function(stream){
     
     peer.on("call", function(call){
       window.focus();
-      setInterval(function(){
-        if (con){
-          call.answer(stream2);
-        }
-      })
+      //setInterval(function(){
+        //if (con){
+          //text.innerHTML=`${call.peer} wants to call you. (y/n)`;
+          const x = confirm(`${call.peer} wants to call you. Confirm?`)
+          if (x){
+            call.answer(stream2);
+            room_input.value = call.peer;
+          }
+        //}
+      //})
       
       call.on("stream", function(otherStream){
         your_video.srcObject = otherStream;
@@ -77,7 +81,7 @@ let handleSuccess = function(stream){
 navigator.mediaDevices.getUserMedia({video: true, audio: true})
 .then(handleSuccess)
 
-socket.on("video", (data) => {
+/*socket.on("video", (data) => {
     const data1 = {
         data: data
     };
@@ -101,9 +105,9 @@ socket.on("video", (data) => {
 socket.on("connect", () => {
   testName();
 })
-
+*/
 window.oncontextmenu = function(){
-  if (document.body != null){
+   if (document.body != null){
     alert("Hey hey hey! What are you trying to pull?");
     localStorage.removeItem(user)
     document.body.remove();
@@ -114,11 +118,11 @@ window.oncontextmenu = function(){
 
 window.addEventListener("beforeunload", (e) => {
   e.returnValue = "Test";
-  localStorage.removeItem(user);
+  //localStorage.removeItem(user);
 })
 document.addEventListener("keydown", (e) => {
   
-  if (keys.length < 3){
+  /*if (keys.length < 3){
     keys.push(e.keyCode);
     console.log(keys)
   } if (keys.length == 3){
@@ -157,27 +161,19 @@ document.addEventListener("keydown", (e) => {
       document.body.remove();
       window.location.href = "https://greater.armanakbari1.repl.co";
       }
+    }*/
+    if (e.keyCode == 13){
+      send_btn.click();
     }
 })
-
-document.body.onload = function(){
-  if ((navigator.platform).slice(0, -2) == "Win" && screen_num < 1200){
-    localStorage.removeItem(user);
-    alert("Hey hey hey! What are you trying to pull?")
-    
-    document.body.remove();
-    window.location.href = "https://greater.armanakbari1.repl.co"
-  }
-  peer = new Peer(user)
-}
-
+/*
 socket.on("join", (user2) => {
   text.innerHTML = "A user would like to call. Accept call? (y/n)";
   yes_no = true;
   console.log(user2)
   user_two = user2;
 })
-
+*/
 send_btn.addEventListener("click", () => {
   if (yes_no){
     if (text_input.value == "y"){
@@ -199,13 +195,14 @@ send_btn.addEventListener("click", () => {
       yes_no = false;
     }
   } else if (!yes_no){
-    if (Object.values(connected_users)[1] != undefined){
-      console.log("Message sending");
-      socket.emit("message", {message: text_input.value, frome: user, to: Object.values(connected_users)[1]});
+    if (/*Object.values(connected_users)[1] != undefined*/room_input.value != "" || room_input.value != null || room_input.value != undefined){
+      //socket.emit("message", {message: text_input.value, frome: user, to: Object.values(connected_users)[1]});
+      socket.emit("message", {message: text_input.value, sender: user, receiver: room_input.value});
+      text_input.value = "";
     }
   }
 })
-
+/*
 socket.on("answer", (answer) => {
   if (answer == "y"){
     alert("Call accepted");
@@ -213,13 +210,11 @@ socket.on("answer", (answer) => {
     alert("Call declined")
   }
 })
-
+*/
 socket.on("message2", (data) => {
   let message = Object.values(data)[0];
   let sender = Object.values(data)[1];
   let receiver = Object.values(data)[2];
-  console.log("sender: " + sender);
-  console.log("receiver: " + receiver)
   if (user == sender){
     if (text.innerHTML == ""){
       text.innerHTML = `Me: ${message}`;
@@ -227,8 +222,6 @@ socket.on("message2", (data) => {
       text.innerHTML += `<br>Me: ${message}`;
     }
   } else if (user == receiver){
-    console.log(receiver);
-    console.log(text.innerHTML == "")
     if (text.innerHTML == ""){
       text.innerHTML = `${sender}: ${message}`;
     } else {
@@ -236,3 +229,30 @@ socket.on("message2", (data) => {
     }
   }
 })
+
+
+document.body.onload = function(){
+  peer = new Peer(user, {metadata: {UserName: user}});
+  $.getJSON("https://api.ipify.org?format=json", (data) => {
+      ip = data.ip;
+      const data3 = {
+          ip: ip,
+      };
+      const send_data = {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data3)
+      };
+      fetch("/logged-in", send_data)
+      .then(response => response.json())
+      .then(function(json){
+          if (Object.values(json)[0]){
+              alert("Logged in")
+          } else {
+            window.location.href="/"
+          }
+      })
+  })
+}

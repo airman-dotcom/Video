@@ -4,13 +4,17 @@ let psw2_input = document.getElementById("psw2");
 const sign_up_button = document.getElementById("sign-up");
 const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const psw_num_regex = /\d/;
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 const psw_special_regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-
+var ip;
 function submit(){
+    $.getJSON("https://api.ipify.org?format=json", (data) => {
+        ip = data.ip
+        alert(ip)
+    })
     const data = {
         email: email_input.value,
-        psw: psw1_input.value
+        psw: psw1_input.value,
+        ip: ip,
     };
     const send_data = {
         method: "POST",
@@ -69,3 +73,28 @@ document.addEventListener("keydown", (e) => {
         sign_up_button.onclick();
     }
 })
+
+window.onload = function(){
+    alert(1)
+    $.getJSON("https://api.ipify.org?format=json", (data) => {
+        ip = data.ip;
+        alert(ip)
+        const data3 = {
+            ip: ip,
+        };
+        const send_data = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data3)
+        };
+        fetch("/logged-in", send_data)
+        .then(response => response.json())
+        .then(function(json){
+            if (Object.values(json)[0]){
+                window.location.href="/video"
+            }
+        })
+    })
+  }
