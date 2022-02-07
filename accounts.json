@@ -1,7 +1,5 @@
-{
-    "email": "",
-    "passwords": "",
-    "logged_in": "",
-    "time": "",
-    "ip": ""
-}
+{"email": "",
+          "psw": "",
+          "logged": "",
+          "time": "",
+          "ip": ""}
