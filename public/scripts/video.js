@@ -60,11 +60,11 @@ let handleSuccess = function(stream){
       //setInterval(function(){
         //if (con){
           //text.innerHTML=`${call.peer} wants to call you. (y/n)`;
-          const x = confirm(`${call.peer} wants to call you. Confirm?`)
-          if (x){
+          /*const x = confirm(`${call.peer} wants to call you. Confirm?`)
+          if (x){*/
             call.answer(stream2);
             room_input.value = call.peer;
-          }
+          //}
         //}
       //})
       
