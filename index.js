@@ -9,12 +9,12 @@ const { v4: uuidv4 } = require("uuid")
 app.use(express.static("public"));
 app.use(express.json());
 let users = {};
-const port = process.env.PORT || 8080 || "localhost"
+const port = process.env.PORT || 8080
 let num = 1;
 let info;
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let user1;
-server.listen(3000, () => {
+server.listen(port, () => {
   console.log("Server Starting")
 })
 
