@@ -13,7 +13,7 @@ let num = 1;
 let info;
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let user1;
-server.listen(3000, "localhost", () => {
+server.listen(3000, () => {
   console.log("Listening on http://localhost:3000/")
 })
 
