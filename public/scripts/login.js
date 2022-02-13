@@ -21,6 +21,7 @@ function send() {
         .then(response => response.json())
         .then(function (json) {
             if (Object.values(json)[0]) {
+                document.cookie = `logg=true;uname=${email_input.value}`
                 alert("Logged in.")
                 window.location.href = "/video";
             } else {
@@ -54,7 +55,7 @@ document.addEventListener("keydown", (e) => {
         }
     }
 })
-
+/*
 window.onload = function(){
     alert(1)
     $.getJSON("https://api.ipify.org?format=json", (data) => {
@@ -78,4 +79,18 @@ window.onload = function(){
             }
         })
     })
+}*/
+
+document.body.onload = function(){
+    if (document.cookie != ""){
+        //logg=true;uname=amathakbari@gmail.com
+        let arr = document.cookie.split(";")
+        let thing1 = arr[0].split("=")
+        let thing2 = arr[1].split("=")
+        console.log(thing2)
+        if (thing2[1] == "true"){
+            alert("Logged in")
+            window.location.href= "/video"
+        }
+    }
 }

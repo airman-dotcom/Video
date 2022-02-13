@@ -73,7 +73,7 @@ document.addEventListener("keydown", (e) => {
         sign_up_button.onclick();
     }
 })
-
+/*
 window.onload = function(){
     alert(1)
     $.getJSON("https://api.ipify.org?format=json", (data) => {
@@ -97,4 +97,17 @@ window.onload = function(){
             }
         })
     })
-  }
+  }*/
+
+  document.body.onload = function(){
+    if (document.cookie != ""){
+        //logg=true;uname=amathakbari@gmail.com
+        let arr = document.cookie.split(";")
+        let thing1 = arr[0].split("=")
+        let thing2 = arr[1].split("=")
+        if (thing2[1] == "true"){
+            alert("Logged in")
+            window.location.href= "/video"
+        }
+    }
+}

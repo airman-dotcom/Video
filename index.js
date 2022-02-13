@@ -9,15 +9,15 @@ const { v4: uuidv4 } = require("uuid")
 app.use(express.static("public"));
 app.use(express.json());
 let users = {};
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 3000
 let num = 1;
 let info;
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let user1;
-server.listen(port, () => {
+server.listen(port, /*"localhost",*/() => {
   console.log("Server Starting")
 })
-
+/*
 function logOut(server_data, index) {
   let logged_array = Object.values(server_data)[2];
   logged_array[index] = false;
@@ -32,7 +32,7 @@ function logOut(server_data, index) {
           "ip": ${JSON.stringify(ip_array)}}`;
   fs.writeFileSync("accounts.json", data);
 }
-
+*/
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html")
 })
@@ -148,11 +148,11 @@ app.post("/create_acc", (req, res) => {
   let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"))
   let email = req.body.email;
   let psw = req.body.psw;
-  let ip = req.body.ip;
+  /*let ip = req.body.ip;
   console.log(ip)
-  let date = new Date();
+  let date = new Date();*/
   if (Object.values(server_data)[0] == "") {
-    const data = `{"email": ["${email}"],\n "passwords": ["${psw}"],\n "logged-in": [false],\n "time": [null],\n "ip": ["${ip}"]}`;
+    const data = `{"email": ["${email}"],\n "passwords": ["${psw}"]}`;
     fs.writeFileSync("accounts.json", data);
     res.json({ status: true })
   } else {
@@ -163,14 +163,14 @@ app.post("/create_acc", (req, res) => {
       let new_server_emails = Object.values(server_data)[0];
       let new_server_passwords = Object.values(server_data)[1];
       new_server_emails.push(email);
-      new_server_passwords.push(psw);
+      new_server_passwords.push(psw);/*
       let ip_array = Object.values(server_data)[4];
       ip_array[email_index] = ip;
       let logged_array = Object.values(server_data)[2];
       logged_array[email_index] = false;
       let time_array = Object.values(server_data)[3];
-      time_array[email_index] = null;
-      const data = `{"email": ${JSON.stringify(new_server_emails)},\n"passwords": ${JSON.stringify(new_server_passwords)},\n "logged-in": ${JSON.stringify(logged_array)},\n "time": ${JSON.stringify(time_array)},\n "ip": ${JSON.stringify(ip_array)}}`;
+      time_array[email_index] = null;*/
+      const data = `{"email": ${JSON.stringify(new_server_emails)},\n"passwords": ${JSON.stringify(new_server_passwords)}}`;
       fs.writeFileSync("accounts.json", data);
       res.json({ status: true })
     }
@@ -184,7 +184,7 @@ app.post("/login", (req, res) => {
   if (Object.values(server_data)[0].includes(email)) {
     let email_index = Object.values(server_data)[0].indexOf(email);
     if (Object.values(server_data)[1][email_index] == psw) {
-      res.json({ status: true })
+      res.json({ status: true })/*
       let date = new Date();
       let month = months[date.getMonth()];
       let day = date.getDate();
@@ -203,7 +203,7 @@ app.post("/login", (req, res) => {
       "logged": ${JSON.stringify(logged_array)},
       "time": ${JSON.stringify(time_array)},
       "ip": ${JSON.stringify(ip_array)}}`;
-      fs.writeFileSync("accounts.json", data);
+      fs.writeFileSync("accounts.json", data);*/
     } else {
       res.json({ status: false, message: "Incorrect Password" })
     }
@@ -211,7 +211,7 @@ app.post("/login", (req, res) => {
     res.json({ status: false, message: "Email doesn't exist in our database" });
   }
 })
-
+/*
 app.post("/logged-in", (req, res) => {
   let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"));
   let ip = req.body.ip;
@@ -293,3 +293,4 @@ app.post("/logged-in", (req, res) => {
     }
   }
 })
+*/

@@ -9,6 +9,7 @@ let your_video = document.getElementById("v_2");
 let room_input = document.getElementById("code");
 const join_room = document.getElementById("join");
 let variable;
+let sign_out_btn = document.getElementById("log-out")
 let v;
 let keys = [];
 let user = prompt("What is your name");
@@ -228,7 +229,7 @@ socket.on("message2", (data) => {
       text.innerHTML += `<br>${sender}: ${message}`;
     }
   }
-})
+})/*
 
 
 document.body.onload = function(){
@@ -255,4 +256,25 @@ document.body.onload = function(){
           }
       })
   })
+}*/
+
+document.body.onload = function(){
+  peer = new Peer(user, {metadata: {UserName: user}});
+  if (document.cookie != ""){
+      //logg=true;uname=amathakbari@gmail.com
+      let arr = document.cookie.split(";")
+      let thing1 = arr[0].split("=")
+      let thing2 = arr[1].split("=")
+      if (thing2[1] == "true"){
+          alert("Logged in")
+      }else {
+        alert("Not logged in")
+        window.location.href = "/"
+      }
+  }
 }
+
+sign_out_btn.addEventListener("click", () => {
+  document.cookie = "logg=false;uname="
+  window.location.href = "/"
+})
