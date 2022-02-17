@@ -7,14 +7,9 @@ const psw_num_regex = /\d/;
 const psw_special_regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 var ip;
 function submit(){
-    $.getJSON("https://api.ipify.org?format=json", (data) => {
-        ip = data.ip
-        alert(ip)
-    })
     const data = {
         email: email_input.value,
-        psw: psw1_input.value,
-        ip: ip,
+        psw: psw1_input.value
     };
     const send_data = {
         method: "POST",
@@ -29,7 +24,6 @@ function submit(){
         if (Object.values(json)[0]){
             alert("Account created succesfully.");
             window.location.href = "/login"
-            
         } else if(!Object.values(json)[0]){
             alert(Object.values(json)[1])
         }
@@ -73,32 +67,6 @@ document.addEventListener("keydown", (e) => {
         sign_up_button.onclick();
     }
 })
-/*
-window.onload = function(){
-    alert(1)
-    $.getJSON("https://api.ipify.org?format=json", (data) => {
-        ip = data.ip;
-        alert(ip)
-        const data3 = {
-            ip: ip,
-        };
-        const send_data = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data3)
-        };
-        fetch("/logged-in", send_data)
-        .then(response => response.json())
-        .then(function(json){
-            if (Object.values(json)[0]){
-                window.location.href="/video"
-            }
-        })
-    })
-  }*/
-
   document.body.onload = function(){
     if (document.cookie != ""){
         //logg=true;uname=amathakbari@gmail.com

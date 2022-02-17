@@ -1,4 +1,3 @@
-
 let email_input = document.getElementById("email");
 let psw_input = document.getElementById("psw");
 const login_btn = document.getElementById("login");
@@ -55,31 +54,6 @@ document.addEventListener("keydown", (e) => {
         }
     }
 })
-/*
-window.onload = function(){
-    alert(1)
-    $.getJSON("https://api.ipify.org?format=json", (data) => {
-        ip = data.ip;
-        alert(ip)
-        const data3 = {
-            ip: ip,
-        };
-        const send_data = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data3)
-        };
-        fetch("/logged-in", send_data)
-        .then(response => response.json())
-        .then(function(json){
-            if (Object.values(json)[0]){
-                window.location.href="/video";
-            }
-        })
-    })
-}*/
 
 document.body.onload = function(){
     if (document.cookie != ""){
