@@ -19,7 +19,7 @@ let num = 1;
 let info;
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let user1;
-server.listen(port, /*"localhost",*/() => {
+server.listen(port, function(){
   console.log("Server Starting")
 })
 let credentials = db.collection("credentials")
