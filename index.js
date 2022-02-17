@@ -14,7 +14,7 @@ const kittySchema = new mongoose.Schema()
 app.use(express.static("public"));
 app.use(express.json());
 let users = {};
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 let num = 1;
 let info;
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
