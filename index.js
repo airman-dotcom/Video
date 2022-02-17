@@ -5,7 +5,12 @@ const server = http.createServer(app);
 const fs = require("fs");
 const { Server } = require("socket.io");
 const io = new Server(server);
-const { v4: uuidv4 } = require("uuid")
+const { v4: uuidv4 } = require("uuid");
+const mongoose = require("mongoose")
+let MONGO_URI = "mongodb+srv://amathakbari:24l63AQs7kQ8D3hX@my-db.m8xjh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+mongoose.connect(MONGO_URI)
+let db = mongoose.connection
+const kittySchema = new mongoose.Schema()
 app.use(express.static("public"));
 app.use(express.json());
 let users = {};
@@ -14,25 +19,16 @@ let num = 1;
 let info;
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let user1;
-server.listen(port, /*"localhost",*/() => {
+server.listen(port, "localhost",() => {
   console.log("Server Starting")
 })
-/*
-function logOut(server_data, index) {
-  let logged_array = Object.values(server_data)[2];
-  logged_array[index] = false;
-  let email_array = Object.values(server_data)[0];
-  let psw_array = Object.values(server_data)[1];
-  let time_array = Object.values(server_data)[3];
-  let ip_array = Object.values(server_data)[4];
-  const data = `{"email": ${JSON.stringify(email_array)},
-          "psw": ${JSON.stringify(psw_array)},
-          "logged": ${JSON.stringify(logged_array)},
-          "time": ${JSON.stringify(time_array)},
-          "ip": ${JSON.stringify(ip_array)}}`;
-  fs.writeFileSync("accounts.json", data);
-}
-*/
+let credentials = db.collection("credentials")
+mongoose.connection.on("connected", (err) => {
+  if (err){
+    console.log(err)
+  }
+  console.log("Connected to database")
+})
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html")
 })
@@ -64,14 +60,6 @@ io.on("connection", (socket) => {
   });
   socket.on("message", (data) => {
       console.log(data);
-      /*const data = fs.readFileSync("cred.txt", "utf-8");
-      if (data == ""){
-          let message2 = "In Room: " + `"${room}"` + ". User: " + `"${user}"` + ", texted this: " + `"${message}"` + ".";
-          fs.writeFileSync("cred.txt", message2)
-      } else {
-          let message2 = data + "\nIn Room: " + `"${room}"` + ". User: " + `"${user}"` + ", texted this: " + `"${message}"` + ".";
-          fs.writeFileSync("cred.txt", message2);
-      }*/
       io.emit("message2", data)
   });
   socket.on("join_video", (room_name) => {
@@ -112,20 +100,6 @@ io.on("connection", (socket) => {
       console.log("err");
     }
   });
-
-  /*socket.on("message", (data) => {
-    let message = Object.values(data)[0]
-    let sender = Object.values(data)[1];
-    let sender_id;
-    let receiver_id;
-    let receiver = Object.values(data)[2];
-    if (Object.keys(users).includes(sender) && Object.keys(users).includes(receiver)) {
-      sender_id = Object.values(users)[Object.keys(users).indexOf(sender)];
-      receiver_id = Object.values(users)[Object.keys(users).indexOf(receiver)];
-      io.to(sender_id).to(receiver_id).emit("message2", data);
-    }
-
-  })*/
 })
 
 
@@ -145,152 +119,34 @@ app.post("/test", (req, res) => {
 })
 
 app.post("/create_acc", (req, res) => {
-  let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"))
   let email = req.body.email;
   let psw = req.body.psw;
-  /*let ip = req.body.ip;
-  console.log(ip)
-  let date = new Date();*/
-  if (Object.values(server_data)[0] == "") {
-    const data = `{"email": ["${email}"],\n "passwords": ["${psw}"]}`;
-    fs.writeFileSync("accounts.json", data);
-    res.json({ status: true })
-  } else {
-    if (Object.values(server_data)[0].includes(email)) {
-      res.json({ status: false, message: "Email already exists in our database." })
+  credentials.findOne({email: email}, (err, doc) => {
+    if (doc == null){
+      const data2 = {
+        email: email,
+        password: psw
+      }
+      credentials.insertOne(data2)
+      res.json({status: true})
     } else {
-      let email_index = Object.values(server_data).indexOf(email);
-      let new_server_emails = Object.values(server_data)[0];
-      let new_server_passwords = Object.values(server_data)[1];
-      new_server_emails.push(email);
-      new_server_passwords.push(psw);/*
-      let ip_array = Object.values(server_data)[4];
-      ip_array[email_index] = ip;
-      let logged_array = Object.values(server_data)[2];
-      logged_array[email_index] = false;
-      let time_array = Object.values(server_data)[3];
-      time_array[email_index] = null;*/
-      const data = `{"email": ${JSON.stringify(new_server_emails)},\n"passwords": ${JSON.stringify(new_server_passwords)}}`;
-      fs.writeFileSync("accounts.json", data);
-      res.json({ status: true })
+      res.json({ status: false, message: "Email already exists in our database." })
     }
-  }
+  })
 })
 
 app.post("/login", (req, res) => {
-  let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"))
   let email = req.body.email;
   let psw = req.body.psw;
-  if (Object.values(server_data)[0].includes(email)) {
-    let email_index = Object.values(server_data)[0].indexOf(email);
-    if (Object.values(server_data)[1][email_index] == psw) {
-      res.json({ status: true })/*
-      let date = new Date();
-      let month = months[date.getMonth()];
-      let day = date.getDate();
-      let year = date.getFullYear();
-      let hour = date.getHours();
-      let minute = date.getMinutes();
-      let email_array = Object.values(server_data)[0];
-      let psw_array = Object.values(server_data)[1];
-      let logged_array = Object.values(server_data)[2];
-      let time_array = Object.values(server_data)[3];
-      let ip_array = Object.values(server_data)[4];
-      logged_array[email_index] = true;
-      time_array[email_index] = `${month}.${day}[${year}]${hour}:${minute};`;
-      const data = `{"email": ${JSON.stringify(email_array)},
-      "passwords": ${JSON.stringify(psw_array)},
-      "logged": ${JSON.stringify(logged_array)},
-      "time": ${JSON.stringify(time_array)},
-      "ip": ${JSON.stringify(ip_array)}}`;
-      fs.writeFileSync("accounts.json", data);*/
-    } else {
-      res.json({ status: false, message: "Incorrect Password" })
-    }
-  } else {
-    res.json({ status: false, message: "Email doesn't exist in our database" });
-  }
-})
-/*
-app.post("/logged-in", (req, res) => {
-  let server_data = JSON.parse(fs.readFileSync("accounts.json", "utf-8"));
-  let ip = req.body.ip;
-  if (Object.values(server_data)[0] == "") {
-    res.json({ status: false })
-  } else {
-    if (Object.values(server_data)[4].includes(ip)) {
-      console.log("Server includes ip")
-      let index = Object.values(server_data)[4].indexOf(ip);
-      if (Object.values(server_data)[2][index]) {
-        //logged-in = true
-        console.log("Logged in");
-        let date = Object.values(server_data)[3][index];
-        let DATE = new Date();
-        //Jan.4[2022]4:25;
-        let year_index = date.indexOf("[");
-        console.log(date[year_index + 1] + date[year_index + 2] + date[year_index + 3] + date[year_index + 4])
-        if (date[year_index + 1] + date[year_index + 2] + date[year_index + 3] + date[year_index + 4] == DATE.getFullYear()) {
-          console.log("Year is same");
-          if (date[0] + date[1] + date[2] == months[DATE.getMonth()]) {
-            console.log("Month is same");
-            let day_index = date.indexOf(".");
-            let day_length = year_index - day_index - 1;
-            let day;
-            if (day_length == 2){
-              day = date[day_index + 1] + date[day_index + 2];
-            } else if (day_length == 1){
-              day = date[day_index + 1];
-            }
-            if (day == DATE.getDate()){
-              console.log("Day is same")
-              let year_index_end = date.indexOf("]");
-              let hour_index = date.indexOf(":");
-              let hour_length = hour_index - year_index_end - 1;
-              let hour;
-              if (hour_length == 2){
-                hour = date[year_index_end + 1] + date[year_index_end + 2];
-              }
-              if (hour_index == 1){
-                hour = date[year_index_end + 1];
-              }
-              let hours_to_min = hour * 60;
-              let end_index = date.indexOf(";");
-              let minute_length = end_index - hour_index - 1;
-              let minute;
-              if (minute_length == 1){
-                minute = date[minute_length + 1];
-              }
-              if (minute_length == 2){
-                minute = date[minute_length + 1] + date[minute_length + 2]
-              }
-              let total_min = hours_to_min + minute;
-              let current_hour_to_mins = DATE.getHours() * 60;
-              let mins = DATE.getUTCMinutes();
-              let total_current_mins = current_hour_to_mins + mins;
-              if (total_min - 30 < total_current_mins){
-                res.json({status: true})
-              } else {
-                res.json({status: false})
-                logOut(server_data, index);
-              }
-            } else { 
-              res.json({status: false})
-              logOut(server_data, index);
-            }
-          } else {
-            res.json({status: false})
-            logOut(server_data, index);
-          }
-        } else {
-          res.json({status: false})
-          logOut(server_data, index);
-        }
+  credentials.findOne({email: email}, (err, doc) => {
+    if (doc != null){
+      if (doc.password == psw){
+        res.json({status: true})
       } else {
-        res.json({status: false})
+        res.json({ status: false, message: "Incorrect Password" })
       }
     } else {
-      res.json({status: false})
+      res.json({ status: false, message: "Email doesn't exist in our database" });
     }
-  }
+  })
 })
-*/
