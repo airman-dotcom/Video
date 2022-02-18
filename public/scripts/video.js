@@ -137,10 +137,8 @@ document.body.onload = function(){
   if (document.cookie != ""){
       //logg=true
       let arr = document.cookie.split("=")
-      console.log(thing2)
-      if (arr[1] == "true"){
-          alert("Logged in")
-          window.location.href= "/video"
+      if (arr[1] != "true"){
+          window.location.href= "/"
       }
   }
 }
