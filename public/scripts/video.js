@@ -134,6 +134,7 @@ socket.on("message2", (data) => {
   }
 })
 document.body.onload = function(){
+  peer = new Peer(user, {metadata: {UserName: user}});
   if (document.cookie != ""){
       //logg=true
       let arr = document.cookie.split("=")
