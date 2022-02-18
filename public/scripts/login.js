@@ -57,12 +57,10 @@ document.addEventListener("keydown", (e) => {
 
 document.body.onload = function(){
     if (document.cookie != ""){
-        //logg=true;uname=amathakbari@gmail.com
-        let arr = document.cookie.split(";")
-        let thing1 = arr[0].split("=")
-        let thing2 = arr[1].split("=")
+        //logg=true
+        let arr = document.cookie.split("=")
         console.log(thing2)
-        if (thing2[1] == "true"){
+        if (arr[1] == "true"){
             alert("Logged in")
             window.location.href= "/video"
         }

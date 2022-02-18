@@ -134,21 +134,16 @@ socket.on("message2", (data) => {
   }
 })
 document.body.onload = function(){
-  peer = new Peer(user, {metadata: {UserName: user}});
   if (document.cookie != ""){
-      //logg=true;uname=amathakbari@gmail.com
-      let arr = document.cookie.split(";")
-      let thing1 = arr[0].split("=")
-      let thing2 = arr[1].split("=")
-      if (thing2[1] == "true"){
+      //logg=true
+      let arr = document.cookie.split("=")
+      console.log(thing2)
+      if (arr[1] == "true"){
           alert("Logged in")
-      }else {
-        alert("Not logged in")
-        window.location.href = "/"
+          window.location.href= "/video"
       }
   }
 }
-
 sign_out_btn.addEventListener("click", () => {
   document.cookie = "logg=false;uname="
   window.location.href = "/"
