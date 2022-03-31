@@ -1,4 +1,4 @@
-# Vide Communication
+# Video Communication
 ### Made by Arman Akbari
 #### Febuary 4, 2022
 
