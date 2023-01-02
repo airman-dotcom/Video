@@ -20,9 +20,10 @@ function send() {
         .then(response => response.json())
         .then(function (json) {
             if (Object.values(json)[0]) {
-                document.cookie = `logg=true;uname=${email_input.value}`
+                document.cookie = `logg=true;`
+                document.cookie = `uname=${email_input.value};`
                 alert("Logged in.")
-                window.location.href = "/video";
+                window.location.href = "/menu";
             } else {
                 alert(Object.values(json)[1])
             }
@@ -57,11 +58,18 @@ document.addEventListener("keydown", (e) => {
 
 document.body.onload = function(){
     if (document.cookie != ""){
-        //logg=true
-        let arr = document.cookie.split("=")
-        if (arr[1] == "true"){
+        //logg=true;uname=amathakbari@gmail.com
+        let arr;
+        if (document.cookie.includes(";")){
+            arr = document.cookie.split(";");
+            arr = arr[0].split("=")[1];
+        } else {
+            arr = document.cookie.split("=")[1];
+        }
+        //[ar]
+        if (arr == "true"){
             alert("Logged in")
-            window.location.href= "/video"
+            window.location.href= "/menu"
         }
     }
 }

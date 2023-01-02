@@ -1,0 +1,95 @@
+.col {
+    border: 2px solid black;
+    width: 50%;
+    text-align: center;
+    display: grid;
+}
+
+.container {
+    width: 100vw;
+}
+
+#friend {
+    margin-bottom: 2vh;
+}
+
+.col>div {
+    height: 20vh;
+    width: 80%;
+    border: 2px solid black;
+
+}
+
+.col>div,
+.col>button,
+.col>p,
+.col>input {
+    justify-self: center;
+    order: 10;
+}
+
+.row {
+    display: flex;
+    width: 94vw;
+    margin-left: 4vw;
+    margin-right: 4vw;
+
+}
+
+#sign-out {
+    height: 5vh;
+}
+
+.col:has(#sign-out) {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    place-content: center;
+    border: none;
+}
+
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

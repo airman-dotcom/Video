@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="styles/menu.css"/>
+</head>
+<body>
+    <h1>Welcome </h1>
+    <div class="container">
+        <div class="row">
+          <div class="col">
+            <h3>Friends</h3>
+            <div id="friends">
+            </div>
+            <input id="fi" autocomplete="off" type="text" placeholder="Enter friend username"/>
+            <button id="addfriend">Add Friend</button>
+            <p id="f" style="color: green;display:none;">Friend Request Sent.</p>
+          </div>
+          <div class="col">
+            <h3>Recent Calls</h3>
+            <div id="friends2">
+                
+            </div>
+            <button id="call" onclick="window.location.href = '/video'">Call</button>
+          </div>
+          <div class="col">
+            <button id="sign-out" onclick="signout()">Sign Out</button>
+          </div>
+          <div class="col">
+            <h3>Friend Requests</h3>
+            <div id="requests"></div>
+          </div>
+        </div>
+      </div>
+      
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <p id="modalt"></p>
+      <button id="modala">Accept</button><button id="modalb">Decline</button>
+    </div>
+
+  </div>
+</body>
+<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+<script src="scripts/menu.js"></script>
+</html>

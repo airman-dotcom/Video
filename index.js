@@ -6,7 +6,8 @@ const fs = require("fs");
 const { Server } = require("socket.io");
 const io = new Server(server);
 const { v4: uuidv4 } = require("uuid");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const { json } = require("express");
 let MONGO_URI = "mongodb+srv://amathakbari:24l63AQs7kQ8D3hX@my-db.m8xjh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 mongoose.connect(MONGO_URI)
 let db = mongoose.connection
@@ -14,7 +15,7 @@ const kittySchema = new mongoose.Schema()
 app.use(express.static("public"));
 app.use(express.json());
 let users = {};
-const port = process.env.PORT
+const port = process.env.PORT || 8000;
 let num = 1;
 let info;
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -31,6 +32,10 @@ mongoose.connection.on("connected", (err) => {
 })
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html")
+})
+
+app.get("/menu", (req, res) => {
+  res.sendFile(__dirname + "/public/menu.html")
 })
 
 app.get("/video", (req, res) => {
@@ -121,11 +126,16 @@ app.post("/test", (req, res) => {
 app.post("/create_acc", (req, res) => {
   let email = req.body.email;
   let psw = req.body.psw;
+  let uname = req.body.uname;
   credentials.findOne({email: email}, (err, doc) => {
     if (doc == null){
       const data2 = {
         email: email,
-        password: psw
+        password: psw,
+        uname: uname,
+        friends: [],
+        recentCalls: [],
+        requests: [],
       }
       credentials.insertOne(data2)
       res.json({status: true})
@@ -148,5 +158,67 @@ app.post("/login", (req, res) => {
     } else {
       res.json({ status: false, message: "Email doesn't exist in our database" });
     }
+  })
+})
+
+
+app.post("/load", (req, res) => {
+  let email = req.body.email;
+  credentials.findOne({email: email}, (err, results) => {
+    if (results != null){
+      res.json({status: true, data: results})
+    } else {
+      res.json({status: false, data: null})
+    }
+  })
+})
+
+app.post("/addfriend", (req, res) => {
+  let to = req.body.to;
+  let from = req.body.from;
+  credentials.updateOne({uname: to}, {$push: {'requests': from}}, (err, results) => {
+    console.log(results);
+  })
+})
+
+app.post("/friend", (req, res) => {
+  let from = req.body.from;
+  let to = req.body.to;
+  let acc = req.body.a;
+  credentials.findOne({uname: to}, (err, results) => {
+    let nr = results.requests;
+    nr.splice(nr.indexOf(from), 1);
+    credentials.updateOne({uname: to}, {$set: {'requests': nr}})
+    if (acc == true){
+      credentials.updateOne({uname: to}, {$push: {friends: from}});
+      credentials.updateOne({uname: from}, {$push: {friends: to}})
+    }
+  })
+  return res.json({status: true})
+})
+
+app.post("/removefriend", (req, res) => {
+  let friend = req.body.toremove;;
+  let from = req.body.from;
+  credentials.findOne({uname: from}, (err, results) => {
+    let nr = results.friends;
+    nr.splice(nr.indexOf(friend), 1);
+    credentials.updateOne({uname: from}, {$set: {friends: nr}})
+  })
+  credentials.findOne({uname: friend}, (err, results) => {
+    let nr = results.friends;
+    nr.splice(nr.indexOf(from), 1);
+    credentials.updateOne({uname: friend}, {$set: {friends: nr}})
+  })
+  res.json({status: true})
+})
+
+app.post("/nload", (req, res) => {
+  let key = req.body.key;
+  let value = req.body.value;
+  let obj = {};
+  obj[key] = value;
+  credentials.findOne(obj, (err, results) => {
+    if (results != null) res.json({status: true, data: results})
   })
 })
